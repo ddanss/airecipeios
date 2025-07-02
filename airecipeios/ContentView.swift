@@ -26,7 +26,13 @@ struct IngredientsView: View {
                     .multilineTextAlignment(.center)
             } else {
                 List(ingredients) { ingredient in
-                    Text(ingredient.name)
+                    HStack {
+                        Text(ingredient.name)
+                        Spacer()
+                        Toggle("Checked", isOn: Binding(get: { ingredient.checked }, set: { newValue in ingredient.checked = newValue; try? modelContext.save() }))
+                            .labelsHidden()
+                            .toggleStyle(.automatic)
+                    }
                 }
                 .listStyle(.plain)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
