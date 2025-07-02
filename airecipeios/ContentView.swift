@@ -25,18 +25,19 @@ struct IngredientsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .multilineTextAlignment(.center)
             } else {
-                List(ingredients) { ingredient in
-                    HStack {
-                        Text(ingredient.name)
-                        Spacer()
-                        Toggle("Checked", isOn: Binding(get: { ingredient.checked }, set: { newValue in ingredient.checked = newValue; try? modelContext.save() }))
-                            .labelsHidden()
-                            .toggleStyle(.automatic)
+                List {
+                    ForEach(ingredients) { ingredient in
+                        HStack {
+                            Text(ingredient.name)
+                            Spacer()
+                            Toggle("Checked", isOn: Binding(get: { ingredient.checked }, set: { newValue in ingredient.checked = newValue; try? modelContext.save() }))
+                                .labelsHidden()
+                                .toggleStyle(.automatic)
+                        }
                     }
+                    .onDelete(perform: deleteIngredients)
                 }
-                .listStyle(.plain)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.clear)
+                .listStyle(PlainListStyle())
             }
 
             Button(action: { showingAddSheet = true }) {
@@ -81,6 +82,13 @@ struct IngredientsView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
+    }
+    
+    private func deleteIngredients(at offsets: IndexSet) {
+        for index in offsets {
+            let ingredient = ingredients[index]
+            modelContext.delete(ingredient)
+        }
     }
 }
 
