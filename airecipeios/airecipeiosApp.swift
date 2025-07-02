@@ -12,9 +12,8 @@ import SwiftData
 struct airecipeiosApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
             Ingredient.self,
-            Recipe.self
+            Recipe.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
