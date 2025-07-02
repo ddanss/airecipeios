@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import FirebaseAI
 
 struct RecipesView: View {
     
@@ -16,13 +17,41 @@ struct RecipesView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            TextField("Search Recipes", text: $searchText)
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding(.horizontal)
-                .frame(maxHeight: .infinity, alignment: .top)
-                .layoutPriority(1)
+            HStack {
+                TextField("Search Recipes", text: $searchText)
+                    .padding(12)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                    .layoutPriority(1)
+                Button(action: {
+                    let model = FirebaseAI.firebaseAI(backend: .googleAI()).generativeModel(modelName: "gemini-2.5-flash", generationConfig: GenerationConfig(
+                        responseMIMEType: "application/json",
+                        responseSchema: Schema.object(properties: [
+                            "title": .string(),
+                            "ingredients": Schema.array(items: Schema.object(properties: [
+                                "name": .string(),
+                                "quantity": .string(),
+                                "unit": .string()
+                            ])),
+                            "instructions": .string()
+                        ])
+                    ))
+                    let prompt = "Give me one cooking recipe."
+                    
+                    
+                }) {
+                    Text("Search")
+                        .padding(.horizontal)
+                        .padding(.vertical, 10)
+                        .background(Color.accentColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.top)
+            .frame(maxHeight: .infinity, alignment: .top)
+            .layoutPriority(1)
             if recipes.isEmpty {
                 
             } else {

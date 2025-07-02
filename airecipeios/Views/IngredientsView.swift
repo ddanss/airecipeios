@@ -17,8 +17,6 @@ struct IngredientsView: View {
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            Color.clear
-            
             if ingredients.isEmpty {
                 Text("Add your ingredients")
                     .font(.largeTitle)
@@ -49,7 +47,7 @@ struct IngredientsView: View {
                     .clipShape(Capsule())
                     .shadow(radius: 6)
             }
-            .padding(.bottom, 100)
+            .padding(.bottom, 10)
             .padding(.trailing, 32)
             .accessibilityIdentifier("addIngredientButton")
             .sheet(isPresented: $showingAddSheet) {
@@ -90,4 +88,8 @@ struct IngredientsView: View {
             modelContext.delete(ingredient)
         }
     }
+}
+
+#Preview {
+    IngredientsView()
 }
