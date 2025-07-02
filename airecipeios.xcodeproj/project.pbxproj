@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		DA44F1CB2E14FB2900C44556 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = DA44F1CA2E14FB2900C44556 /* FirebaseAI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		DAAFF5ED2E14A13D00ECFDA7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA44F1CB2E14FB2900C44556 /* FirebaseAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = airecipeios;
 			packageProductDependencies = (
+				DA44F1CA2E14FB2900C44556 /* FirebaseAI */,
 			);
 			productName = airecipeios;
 			productReference = DAAFF5DD2E14A13D00ECFDA7 /* airecipeios.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = DAAFF5D42E14A13D00ECFDA7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DA44F1C92E14FB2900C44556 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DAAFF5DE2E14A13D00ECFDA7 /* Products */;
 			projectDirPath = "";
@@ -550,6 +559,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DA44F1C92E14FB2900C44556 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.15.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DA44F1CA2E14FB2900C44556 /* FirebaseAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA44F1C92E14FB2900C44556 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DAAFF5D52E14A13D00ECFDA7 /* Project object */;
 }
