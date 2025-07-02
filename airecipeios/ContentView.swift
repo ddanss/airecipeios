@@ -8,54 +8,100 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
+struct IngredientsView: View {
+    @State private var showingAddSheet = false
+    @State private var newIngredient = ""
+    
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @Query var ingredients: [Ingredient]
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
+        ZStack(alignment: .bottomTrailing) {
+            Color.clear
+            
+            if ingredients.isEmpty {
+                Text("Add your ingredients")
+                    .font(.largeTitle)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .multilineTextAlignment(.center)
+            } else {
+                List(ingredients) { ingredient in
+                    Text(ingredient.name)
                 }
-                .onDelete(perform: deleteItems)
+                .listStyle(.plain)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.clear)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
-        }
-    }
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+            Button(action: { showingAddSheet = true }) {
+                Label("Add Ingredient", systemImage: "plus")
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 20)
+                    .background(Color.accentColor)
+                    .foregroundColor(.white)
+                    .clipShape(Capsule())
+                    .shadow(radius: 6)
             }
+            .padding(.bottom, 100)
+            .padding(.trailing, 32)
+            .accessibilityIdentifier("addIngredientButton")
+            .sheet(isPresented: $showingAddSheet) {
+                VStack(spacing: 20) {
+                    Text("Add Ingredient")
+                        .font(.headline)
+                    TextField("Enter ingredient", text: $newIngredient)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                        .textContentType(.none)
+                    HStack {
+                        Button("Cancel") {
+                            showingAddSheet = false
+                            newIngredient = ""
+                        }
+                        Spacer()
+                        Button("Add") {
+                            let newItem = Ingredient(name: newIngredient)
+                            modelContext.insert(newItem)
+                            showingAddSheet = false
+                            newIngredient = ""
+                        }
+                        .disabled(newIngredient.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    }
+                    .padding([.leading, .trailing], 30)
+                }
+                .presentationDetents([.medium])
+                .padding()
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        
+    }
+}
+
+struct RecipesView: View {
+    var body: some View {
+        Text("Recipes Screen")
+            .font(.largeTitle)
+            .padding()
+    }
+}
+
+struct ContentView: View {
+    var body: some View {
+        TabView {
+            IngredientsView()
+                .tabItem {
+                    Label("Ingredients", systemImage: "leaf")
+                }
+
+            RecipesView()
+                .tabItem {
+                    Label("Recipes", systemImage: "book")
+                }
         }
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
