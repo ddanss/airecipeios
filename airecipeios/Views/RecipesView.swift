@@ -85,39 +85,10 @@ struct RecipesView: View {
                 .cornerRadius(12)
             }
             
-            if recipeToShow != nil {
-                ZStack {
-                    VStack {
-                        HStack {
-                            Text("\(recipeToShow?.title ?? "NA")")
-                                .font(.headline)
-                            Spacer()
-                            Button( action: {
-                                recipeToShow = nil
-                            }, label: {
-                                ZStack {
-                                    Circle()
-                                        .fill(Color.white)
-                                        .frame(width: 30, height: 30, alignment: .center)
-                                    Image(systemName: "xmark")
-                                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                                        .foregroundColor(.secondary)
-                                }
-                                .padding(8)
-                                .contentShape(Circle())
-                            })
-                        }
-                        ScrollView {
-                            Text("\(recipeToShow?.ingredients ?? "NA")")
-                            Text("\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")")
-                        }
-                    }
-                    .padding(10)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.gray)
-                    .cornerRadius(12)
+            if let recipe = recipeToShow {
+                RecipeDetailView(recipeToShow: recipe) {
+                    recipeToShow = nil
                 }
-                .padding(20)
             }
         }
     }
