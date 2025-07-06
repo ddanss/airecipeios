@@ -15,8 +15,8 @@ struct RecipesView: View {
     @Query var recipes: [Recipe]
     @Query var ingredients: [Ingredient]
     @State private var searchText: String = ""
-    @State private var showPopup: Bool = false
     @State private var isLoading: Bool = false
+    @State private var recipeToShow: Recipe? = nil
     
     var body: some View {
         ZStack {
@@ -60,8 +60,11 @@ struct RecipesView: View {
                     
                 } else {
                     List {
-                        ForEach(recipes) { recipe in
+                        ForEach(recipes.reversed()) { recipe in
                             Text(recipe.title)
+                                .onTapGesture {
+                                    recipeToShow = recipe
+                                }
                         }
                     }
                 }
@@ -69,7 +72,7 @@ struct RecipesView: View {
             .frame(maxHeight: .infinity)
             .onChange(of: recipes.count, { oldValue, newValue in
                 if newValue > oldValue {
-                    showPopup = true
+                    recipeToShow = recipes.last
                 }
             })
             
@@ -82,10 +85,40 @@ struct RecipesView: View {
                 .cornerRadius(12)
             }
             
-            if showPopup {
-                
+            if recipeToShow != nil {
+                ZStack {
+                    VStack {
+                        HStack {
+                            Text("\(recipeToShow?.title ?? "NA")")
+                                .font(.headline)
+                            Spacer()
+                            Button( action: {
+                                recipeToShow = nil
+                            }, label: {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.white)
+                                        .frame(width: 30, height: 30, alignment: .center)
+                                    Image(systemName: "xmark")
+                                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(8)
+                                .contentShape(Circle())
+                            })
+                        }
+                        ScrollView {
+                            Text("\(recipeToShow?.ingredients ?? "NA")")
+                            Text("\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")")
+                        }
+                    }
+                    .padding(10)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.gray)
+                    .cornerRadius(12)
+                }
+                .padding(20)
             }
         }
     }
 }
-
