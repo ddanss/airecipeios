@@ -24,20 +24,18 @@ class FetchRecipe {
                 "instructions": .string()
             ])
         ))
-        Task { @MainActor in
-            do {
-                let response = try await model.generateContent(prompt)
-                let jsonData = Data(response.text!.utf8)
-                let recipeDictionary = try JSONSerialization.jsonObject(with: jsonData) as! [String: Any]
-                let recipe: Recipe = Recipe(
-                    title: recipeDictionary["title"] as? String ?? "Title",
-                    ingredients: recipeDictionary["ingredients"] as? String ?? "NA",
-                    instructions: recipeDictionary["instructions"] as? String ?? "NA"
-                )
-                modelContext.insert(recipe)
-            } catch {
-                print("ERROR")
-            }
+        do {
+            let response = try await model.generateContent(prompt)
+            let jsonData = Data(response.text!.utf8)
+            let recipeDictionary = try JSONSerialization.jsonObject(with: jsonData) as! [String: Any]
+            let recipe: Recipe = Recipe(
+                title: recipeDictionary["title"] as? String ?? "Title",
+                ingredients: recipeDictionary["ingredients"] as? String ?? "NA",
+                instructions: recipeDictionary["instructions"] as? String ?? "NA"
+            )
+            modelContext.insert(recipe)
+        } catch {
+            print("ERROR")
         }
     }
 }

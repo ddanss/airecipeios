@@ -15,52 +15,77 @@ struct RecipesView: View {
     @Query var recipes: [Recipe]
     @Query var ingredients: [Ingredient]
     @State private var searchText: String = ""
+    @State private var showPopup: Bool = false
+    @State private var isLoading: Bool = false
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                TextField("I'm feeling like cooking something...", text: $searchText)
-                    .padding(12)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(8)
-                    .layoutPriority(1)
-                Button(action: {
-                    var prompt = "Give me one cooking recipe."
-                    if !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        prompt += " I want something \(searchText)."
-                    }
-                    let checkedIngredients = ingredients.filter { !$0.checked }
-                    if !checkedIngredients.isEmpty {
-                        prompt += " The only ingredients I have are \(ingredients.map((\.name)).joined(separator: ", "))."
-                    }
-                    
-                    Task {
-                        await FetchRecipe.fetchRecipe(prompt: prompt, modelContext: modelContext)
-                    }
-                }) {
-                    Text("Search")
-                        .padding(.horizontal)
-                        .padding(.vertical, 10)
-                        .background(Color.accentColor)
-                        .foregroundColor(.white)
+        ZStack {
+            VStack(spacing: 0) {
+                HStack {
+                    TextField("I'm feeling like cooking something...", text: $searchText)
+                        .padding(12)
+                        .background(Color(.systemGray6))
                         .cornerRadius(8)
-                        .frame(minWidth: 100)
+                        .layoutPriority(1)
+                    Button(action: {
+                        isLoading = true
+                        var prompt = "Give me one cooking recipe."
+                        if !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            prompt += " I want something \(searchText)."
+                        }
+                        let checkedIngredients = ingredients.filter { !$0.checked }
+                        if !checkedIngredients.isEmpty {
+                            prompt += " The only ingredients I have are \(ingredients.map((\.name)).joined(separator: ", "))."
+                        }
+                        
+                        Task {
+                            await FetchRecipe.fetchRecipe(prompt: prompt, modelContext: modelContext)
+                            isLoading = false
+                        }
+                    }) {
+                        Text("Search")
+                            .padding(.horizontal)
+                            .padding(.vertical, 10)
+                            .background(Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            .frame(minWidth: 100)
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top)
+                .frame(maxHeight: 100, alignment: .top)
+                .layoutPriority(1)
+                if recipes.isEmpty {
+                    
+                } else {
+                    List {
+                        ForEach(recipes) { recipe in
+                            Text(recipe.title)
+                        }
+                    }
                 }
             }
-            .padding(.horizontal)
-            .padding(.top)
-            .frame(maxHeight: 100, alignment: .top)
-            .layoutPriority(1)
-            if recipes.isEmpty {
-                
-            } else {
-                List {
-                    ForEach(recipes) { recipe in
-                        Text(recipe.title)
-                    }
+            .frame(maxHeight: .infinity)
+            .onChange(of: recipes.count, { oldValue, newValue in
+                if newValue > oldValue {
+                    showPopup = true
                 }
+            })
+            
+            if isLoading {
+                ProgressView {
+                    Text("Searching for a recipe...")
+                }
+                .padding(12)
+                .background(Color.gray.opacity(0.3))
+                .cornerRadius(12)
+            }
+            
+            if showPopup {
+                
             }
         }
-        .frame(maxHeight: .infinity)
     }
 }
+
