@@ -66,6 +66,11 @@ struct RecipesView: View {
                                     recipeToShow = recipe
                                 }
                         }
+                        .onDelete(perform: { index in
+                            let recipe = recipes[index.first!]
+                            modelContext.delete(recipe)
+                            try? modelContext.save()
+                        })
                     }
                 }
             }
