@@ -20,6 +20,6 @@ class Recipe {
     }
     
     func getIngredientsString() -> String {
-        return ingredients.map { "\($0["name"] ?? "") (\($0["quantity"] ?? "") \($0["unit"] ?? ""))" } .joined(separator: "\n")
+        return ingredients.map { "* \($0["name"] ?? "") (\($0["quantity"] ?? "") \($0["unit"] ?? ""))" } .joined(separator: "\n")
     }
 }

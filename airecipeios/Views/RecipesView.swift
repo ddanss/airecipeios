@@ -77,12 +77,16 @@ struct RecipesView: View {
             })
             
             if isLoading {
-                ProgressView {
-                    Text("Searching for a recipe...")
-                }
-                .padding(12)
-                .background(Color.gray.opacity(0.3))
-                .cornerRadius(12)
+                Color.gray.opacity(0.3)
+                    .edgesIgnoringSafeArea(.all)
+                    .overlay(
+                        ProgressView {
+                            Text("Searching for a recipe...")
+                        }
+                        .padding(12)
+                        .background(Color.gray)
+                        .cornerRadius(12)
+                    )
             }
             
             if let recipe = recipeToShow {
