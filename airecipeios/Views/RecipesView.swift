@@ -12,7 +12,7 @@ import FirebaseAI
 struct RecipesView: View {
     
     @Environment(\.modelContext) private var modelContext
-    @Query var recipes: [Recipe]
+    @Query(sort: \Recipe.id, order: .reverse) var recipes: [Recipe]
     @Query var ingredients: [Ingredient]
     @State private var searchText: String = ""
     @State private var isLoading: Bool = false
@@ -60,7 +60,7 @@ struct RecipesView: View {
                     
                 } else {
                     List {
-                        ForEach(recipes.reversed()) { recipe in
+                        ForEach(recipes) { recipe in
                             Text(recipe.title)
                                 .onTapGesture {
                                     recipeToShow = recipe
