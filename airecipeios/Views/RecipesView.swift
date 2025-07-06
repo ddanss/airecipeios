@@ -12,7 +12,7 @@ import FirebaseAI
 struct RecipesView: View {
     
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Recipe.id, order: .reverse) var recipes: [Recipe]
+    @Query(sort: \Recipe.createdDate, order: .reverse) var recipes: [Recipe]
     @Query var ingredients: [Ingredient]
     @State private var searchText: String = ""
     @State private var isLoading: Bool = false
@@ -72,7 +72,7 @@ struct RecipesView: View {
             .frame(maxHeight: .infinity)
             .onChange(of: recipes.count, { oldValue, newValue in
                 if newValue > oldValue {
-                    recipeToShow = recipes.last
+                    recipeToShow = recipes.first
                 }
             })
             
