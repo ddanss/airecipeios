@@ -30,7 +30,7 @@ class FetchRecipe {
             let recipeDictionary = try JSONSerialization.jsonObject(with: jsonData) as! [String: Any]
             let recipe: Recipe = Recipe(
                 title: recipeDictionary["title"] as? String ?? "Title",
-                ingredients: recipeDictionary["ingredients"] as? String ?? "NA",
+                ingredients: recipeDictionary["ingredients"] as? [[String: String]] ?? [],
                 instructions: recipeDictionary["instructions"] as? String ?? "NA"
             )
             modelContext.insert(recipe)

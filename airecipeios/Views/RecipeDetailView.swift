@@ -34,7 +34,8 @@ struct RecipeDetailView: View {
                     })
                 }
                 ScrollView {
-                    Text("\(recipeToShow?.ingredients ?? "NA")")
+                    
+                    Text("\(recipeToShow?.getIngredientsString() ?? "NA")")
                     Text("\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")\(recipeToShow?.instructions ?? "NA")")
                 }
             }
